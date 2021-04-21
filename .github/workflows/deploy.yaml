@@ -1,0 +1,27 @@
+name: Deploy on Tag
+
+on:
+  tag:
+    branches: [ master ]
+    tags:
+      - 'vx.y.z' # Push events to matching v*, i.e. v1.0, v20.15.10
+
+deploy:
+    name: Generate APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+      - name: Build debug APK
+        run: bash ./gradlew assembleRelease --stacktrace
+      - name: Upload APK
+        uses: actions/upload-artifact@v1
+        with:
+          name: release
+          path: app/build/outputs/apk/release*.apk
+          
