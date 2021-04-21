@@ -1,15 +1,16 @@
 name: Deploy on Tag
 
 on:
-  tag:
-    branches: [ master ]
+  push:
     tags:
-      - 'vx.y.z' # Push events to matching v*, i.e. v1.0, v20.15.10
-
-deploy:
-    name: Generate APK
+      - 'vx.y.z'
+    
+jobs:
+  deploy:
+    name: Build
+    if: github.event.base_ref == 'refs/heads/master'
     runs-on: ubuntu-latest
-
+    
     steps:
       - uses: actions/checkout@v2
       - name: set up JDK 11
@@ -24,4 +25,4 @@ deploy:
         with:
           name: release
           path: app/build/outputs/apk/release*.apk
-          
+
